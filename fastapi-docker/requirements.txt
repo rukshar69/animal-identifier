@@ -1,0 +1,10 @@
+python-dotenv
+fastapi
+uvicorn
+sqlalchemy
+requests
+datetime
+pydantic
+typing
+google-generativeai
+Pillow
