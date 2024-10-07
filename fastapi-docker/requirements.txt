@@ -8,3 +8,4 @@ pydantic
 typing
 google-generativeai
 Pillow
+python-multipart
