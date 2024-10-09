@@ -9,3 +9,5 @@ typing
 google-generativeai
 Pillow
 python-multipart
+pytest
+httpx
