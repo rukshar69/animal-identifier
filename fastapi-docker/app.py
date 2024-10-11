@@ -15,9 +15,17 @@ async def read_root():
 
 @app.post("/upload/")
 async def upload_image(file: UploadFile = File(...)):
+    # Check if the uploaded file is an image
     try:
         image = Image.open(file.file)
+        image.verify()  # Ensure it's a valid image file
+    except UnidentifiedImageError:
+        raise HTTPException(status_code=400, detail="Invalid image file")
+    
+    # Run analysis on the image
+    try:
         response = img_analysis(image)
         return {"Response": response}
     except Exception as e:
         return JSONResponse(status_code=400, content={"error": str(e)})
+
