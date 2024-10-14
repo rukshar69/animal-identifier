@@ -1,0 +1,21 @@
+services:
+  fastapi:
+    build: ./fastapi-docker
+    env_file:
+      - ./fastapi-docker/.env
+    volumes:
+      - ./fastapi-docker:/app
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  frontend:
+    build: ./next-template-2024-main
+    volumes:
+      - ./next-template-2024-main:/app  # Sync local code with container
+      - /app/node_modules  # Avoid host-container node_modules conflicts
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://fastapi:8000  # Use 'fastapi' as the hostname
+    command: ["npm", "run", "dev"]

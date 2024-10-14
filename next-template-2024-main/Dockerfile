@@ -1,34 +1,17 @@
-# Stage 1: Building the app
-FROM node:20-alpine AS builder
+# Use the Node.js image for development
+FROM node:20-alpine
 
-# Set the working directory in the Docker container
+# Set the working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json (or yarn.lock) files
+# Copy only package.json and lock files to install dependencies
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
-# Copy the rest of your app's source code from your host to your image filesystem.
-COPY . .
-
-# Build the Next.js application
-RUN npm run build
-
-# Stage 2: Run the app in production mode
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-# Copy the build output from the builder stage
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-# Expose the port Next.js runs on
+# Expose port 3000 for the Next.js server
 EXPOSE 3000
 
-# Command to run the app
-CMD ["npm", "start"]
+# Start the Next.js app in development mode
+CMD ["npm", "run", "dev"]
